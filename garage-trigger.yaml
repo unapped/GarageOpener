@@ -1,0 +1,116 @@
+esphome:
+  name: "garage-trigger"
+  friendly_name: Garage Trigger
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API - you can remove the API key or add it in as you see fit
+api:
+
+ota:
+  platform: esphome
+# there is an encryption key here - DO NOT REMOVE IT if you have already saved it into your system
+# if you have not saved it 'written' you yaml to device, it is smart to delete it for dev purpose
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Garage Door Opener Adapter"
+    password: "Some Recovery PASSWORD"
+
+captive_portal:
+
+web_server:
+# this is how you can 'visit' the device and use the button via a webpage
+# if you dont want it on your lan or are basically only going to use this via homeassistant you can safely disable this
+
+output:
+  - platform: gpio
+    id: therelay
+    pin: GPIO20 # the pin i chose
+    inverted: True # you only need this if its true, its only defining the DEFAULT position of the relay
+    # you want to have your jumper on the nirmally open, that way if a powerfailure happens or something
+    # it doesnt open the garage
+
+button:
+  - platform: output
+    name: "Garage Door Button"
+    output: therelay
+    duration: 500ms
+
+# these sesnors are just for fun
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal Strength"
+    device_class: signal_strength
+    update_interval: 60min
+  - platform: internal_temperature
+    name: "Seeed Internal Temprature"
+    update_interval: 60min
+
+
+
+# ANOTHER way of doing basically the same thing
+# switch:
+#   - platform: gpio
+#     pin:
+#       number: GPIO2
+#       inverted: true
+#     id: relay_gpio
+#     internal: true
+#   - platform: template
+#     name: "Garage Door Remote"
+#     optimistic: true
+#     turn_on_action:
+#       - switch.turn_on: relay_gpio
+#       - delay: 1min
+#       - switch.turn_off: relay_gpio
+
+#this would probably also work against the relay as well
+# button:
+#   - platform: template
+#     name: "Garage Door Remote"
+#     on_press: 
+#       - switch.turn_on: relay # the relay id below
+#       - delay: 1min
+#       - switch.turn_off: relay # the relay id below
+
+
+
+# I tried this initially on the esp32c6 but found it didnt delay how i wanted based on the turn on issues in the forums
+
+# output:
+#   - platform: gpio
+#     id: relay
+#     pin: 2
+#     inverted: True
+
+# switch:
+#   - platform: gpio
+#     pin: GPIO2
+#       # number: GPIO2
+#       # allow_other_uses: true # Allows this pin to be used elsewhere
+#     id: relay
+#     inverted: True
+#     name: "Garaage Door Remote"
+#     icon: "mdi:gate"
+#     # on_turn_on:
+#     # - delay: 500ms
+#     # - switch.turn_off: relay
+
+
+# you could add this for fun if you want but it does nothing
+# binary_sensor:
+#   - platform: status
+#     name: "Opener Status"
+
