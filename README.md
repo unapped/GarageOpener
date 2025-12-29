@@ -11,6 +11,10 @@ The 5v relays are cheaper than the 3v relays, and there is basically no differen
 
 open home assitant and setup the device with esphome
 
+the pins on the esp32 are
+https://core-electronics.com.au/seeed-studio-xiao-esp32c3-tiny-mcu-board-with-wi-fi-and-ble-battery-charge-supported-power-efficiency-and-rich-interface.html
+as you can see it has a 5v pin!
+yay
 
 
 
