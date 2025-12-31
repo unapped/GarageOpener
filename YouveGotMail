@@ -1,0 +1,26 @@
+# Detecing mail and giving me a notice i can turn off once i fetch it from the stree box
+# dropped a motion sensor inside the box
+
+# HELPER -> create -> input boolean / toggle  -> youve_got_mail
+# this will be what i switch off.. the automation will turn it on
+# this is also what is on my 'card'
+
+
+
+# AUTOMATION
+alias: Mailbox detection
+description: ""
+triggers:
+  - trigger: state
+    entity_id:
+      - binary_sensor.mailboxmotionsensor_occupancy
+    to:
+      - "on"
+conditions: []
+actions:
+  - action: input_boolean.turn_on
+    metadata: {}
+    target:
+      entity_id: input_boolean.youve_got_mail
+    data: {}
+mode: single
